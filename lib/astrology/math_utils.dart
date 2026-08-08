@@ -23,6 +23,8 @@ double sinDeg(double deg) => math.sin(degToRad(deg));
 
 double cosDeg(double deg) => math.cos(degToRad(deg));
 
+double tanDeg(double deg) => math.tan(degToRad(deg));
+
 double atan2Deg(double y, double x) => radToDeg(math.atan2(y, x));
 
 /// 角度を0〜360度の範囲に正規化する。
