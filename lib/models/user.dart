@@ -14,6 +14,10 @@ class User {
 
   final GeoLocation birthPlace;
 
+  /// 出生時刻が記録されているタイムゾーン(IANA形式、例: 'Asia/Tokyo')。
+  /// birthTimeを正しいUTCの一瞬に変換するために必須。
+  final String birthTimeZoneId;
+
   /// 「今」のホロスコープ(5.3節)算出用。未設定なら出生地で代替する。
   final GeoLocation? currentLocation;
 
@@ -23,6 +27,7 @@ class User {
     required this.birthDate,
     required this.birthTime,
     required this.birthPlace,
+    required this.birthTimeZoneId,
     this.currentLocation,
   });
 
@@ -37,6 +42,7 @@ class User {
       birthTime: DateTime.parse(json['birthTime'] as String),
       birthPlace:
           GeoLocation.fromJson(json['birthPlace'] as Map<String, dynamic>),
+      birthTimeZoneId: json['birthTimeZoneId'] as String,
       currentLocation: json['currentLocation'] != null
           ? GeoLocation.fromJson(
               json['currentLocation'] as Map<String, dynamic>)
@@ -51,6 +57,7 @@ class User {
       'birthDate': birthDate.toIso8601String(),
       'birthTime': birthTime.toIso8601String(),
       'birthPlace': birthPlace.toJson(),
+      'birthTimeZoneId': birthTimeZoneId,
       if (currentLocation != null) 'currentLocation': currentLocation!.toJson(),
     };
   }
@@ -60,6 +67,7 @@ class User {
     DateTime? birthDate,
     DateTime? birthTime,
     GeoLocation? birthPlace,
+    String? birthTimeZoneId,
     GeoLocation? currentLocation,
   }) {
     return User(
@@ -68,6 +76,7 @@ class User {
       birthDate: birthDate ?? this.birthDate,
       birthTime: birthTime ?? this.birthTime,
       birthPlace: birthPlace ?? this.birthPlace,
+      birthTimeZoneId: birthTimeZoneId ?? this.birthTimeZoneId,
       currentLocation: currentLocation ?? this.currentLocation,
     );
   }
