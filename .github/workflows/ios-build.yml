@@ -1,0 +1,37 @@
+name: iOS Build Check (no code signing)
+
+# main ブランチへのpush、およびmain向けのPull Requestで実行
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # GitHub上の「Run workflow」ボタンからも手動実行できるようにする
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run analyzer (静的解析、任意)
+        run: flutter analyze
+        continue-on-error: true # 解析警告でビルド全体を止めたくない場合はtrueのまま。厳しくしたい場合はこの行を削除
+
+      - name: Build iOS (署名なし)
+        run: flutter build ios --release --no-codesign
+
+      - name: Build result summary
+        if: always()
+        run: echo "iOSビルドチェックが完了しました。実機配布・審査提出にはmacOS上でのXcode署名設定が別途必要です。"
